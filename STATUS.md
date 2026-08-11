@@ -7,35 +7,42 @@
 | Phase 1: Data Models & JSON I/O | [x] **COMPLETE** | Core data structures and math engine |
 | Phase 2: Flask API Layer | [x] **COMPLETE** | RESTful API endpoints |
 | Phase 3: PyWebView Integration | [x] **COMPLETE** | Native desktop window |
-| Phase 4: Frontend UI & Roster Management | [ ] Pending | HTML/jQuery/Tailwind UI |
+| Phase 4: Frontend UI & Roster Management | [x] **COMPLETE** | HTML/jQuery/Tailwind UI |
 | Phase 5: Integration Testing & Polish | [ ] Pending | End-to-end testing and packaging |
 
 ---
 
 ## Current Focus
 
-**Phase 3: COMPLETE** ✅
+**Phase 4: COMPLETE** ✅
 
-All deliverables for Phase 3 have been completed:
+All deliverables for Phase 4 have been completed:
 - ✅ Flask server runs on background thread (`localhost:5000`)
 - ✅ PyWebView window opens pointing to `http://127.0.0.1:5000`
 - ✅ Window displays title: "Ship Crew Optimizer"
 - ✅ Window size defaults to 1200x800 pixels
 - ✅ Graceful shutdown when window is closed
 - ✅ Sample roster and ship config files auto-created on first launch
-- ✅ Placeholder HTML page displays API status
-- ✅ Syntax validation passes
-- ✅ Flask API imports and routes verified (9 routes)
+- ✅ Complete frontend UI with Tailwind CSS via CDN
+- ✅ Voyage target configuration forms (Morale, Combat, Seafaring)
+- ✅ Shipwright type selector with auto-populating bonuses
+- ✅ Dynamic consumables management (add/remove with flat and percentage stats)
+- ✅ Captain display with level controls
+- ✅ Crew selection with checkboxes, search, select all/deselect all
+- ✅ Results panel displaying optimization results with stat breakdowns
+- ✅ Loading overlay, toast notifications
+- ✅ Roster save/load functions
+- ✅ UI designed for 1200x800 resolution
+- ✅ No placeholder elements remaining
 
 ---
 
 ## Next Steps
 
-1. **Phase 4: Frontend UI & Roster Management**
-    - Create `templates/index.html` with complete UI
-    - Implement voyage target configuration forms
-    - Create crew selection and management interface
-    - Add result card display for optimization output
+1. **Phase 5: Integration Testing & Polish**
+    - End-to-end testing of the complete application
+    - Performance optimization
+    - Packaging and distribution
 
 ---
 
@@ -77,7 +84,8 @@ All deliverables for Phase 3 have been completed:
 | [`sample_roster.json`](sample_roster.json) | Sample roster data | ~120 | 1 |
 | [`sample_ship_config.json`](sample_ship_config.json) | Sample ship configuration | ~50 | 1 |
 | [`api.py`](api.py) | Flask API routes | ~450 | 2 |
-| [`app.py`](app.py) | Desktop application launcher | ~250 | 3 |
+| [`app.py`](app.py) | Desktop application launcher | ~300 | 3, 4 |
+| [`templates/index.html`](templates/index.html) | Phase 4 frontend UI | ~830 | 4 |
 
 ---
 

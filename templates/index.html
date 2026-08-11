@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ship Crew Optimizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            50: '#e8f4f8',
+                            100: '#b8dce8',
+                            200: '#88c5d8',
+                            300: '#58aed8',
+                            400: '#2887d8',
+                            500: '#0066b3',
+                            600: '#004d8a',
+                            700: '#003361',
+                            800: '#001a3d',
+                            900: '#0a0f1d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .stat-bar { transition: width 0.5s ease-in-out; }
+        .panel { backdrop-filter: blur(10px); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a2e; }
+        ::-webkit-scrollbar-thumb { background: #00d4ff; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00a8cc; }
+    </style>
+</head>
+<body class="bg-navy-900 text-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-navy-800 border-b border-navy-600 shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    <h1 class="text-2xl font-bold text-cyan-400">Ship Crew Optimizer</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="api-status" class="flex items-center space-x-2 text-sm">
+                        <span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                        <span class="text-gray-400">Connecting...</span>
+                    </span>
+                    <button id="btn-refresh" class="px-3 py-1 bg-navy-600 hover:bg-navy-700 rounded text-sm transition">
+                        Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left Panel: Voyage Configuration -->
+            <div class="space-y-6">
+                <!-- Voyage Targets -->
+                <div class="bg-navy-800 rounded-lg shadow-xl border border-navy-700 overflow-hidden">
+                    <div class="bg-navy-700 px-4 py-3 border-b border-navy-600">
+                        <h2 class="text-lg font-semibold text-cyan-300">Voyage Targets</h2>
+                    </div>
+                    <div class="p-4 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Morale Target</label>
+                            <input type="number" id="morale-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 300">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Navigation Target</label>
+                            <input type="number" id="navigation-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 250">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Engineering Target</label>
+                            <input type="number" id="engineering-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 200">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Medical Target</label>
+                            <input type="number" id="medical-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 150">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Defense Target</label>
+                            <input type="number" id="defense-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 180">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ship Selection -->
+                <div class="bg-navy-800 rounded-lg shadow-xl border border-navy-700 overflow-hidden">
+                    <div class="bg-navy-700 px-4 py-3 border-b border-navy-600">
+                        <h2 class="text-lg font-semibold text-cyan-300">Ship Configuration</h2>
+                    </div>
+                    <div class="p-4 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Select Ship</label>
+                            <select id="ship-select" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500">
+                                <option value="">Choose a ship...</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button id="btn-add-ship" class="px-3 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-sm transition">Add Ship</button>
+                            <button id="btn-remove-ship" class="px-3 py-2 bg-red-600 hover:bg-red-700 rounded text-sm transition">Remove</button>
+                            <button id="btn-load-ship" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded text-sm transition">Load</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Optimize Button -->
+                <button id="btn-optimize" class="w-full px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 rounded-lg font-semibold text-lg transition shadow-lg">
+                    Optimize Crew Assignment
+                </button>
+            </div>
+
+            <!-- Center Panel: Roster Management -->
+            <div class="space-y-6">
+                <!-- Captains Section -->
+                <div class="bg-navy-800 rounded-lg shadow-xl border border-navy-700 overflow-hidden">
+                    <div class="bg-navy-700 px-4 py-3 border-b border-navy-600 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-cyan-300">Captains</h2>
+                        <button id="btn-add-captain" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-700 rounded text-sm transition">
+                            + Add Captain
+                        </button>
+                    </div>
+                    <div id="captains-list" class="p-4 max-h-96 overflow-y-auto">
+                        <div class="text-center text-gray-400 py-8">
+                            <p>No captains in roster. Add one or load a roster file.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crew Section -->
+                <div class="bg-navy-800 rounded-lg shadow-xl border border-navy-700 overflow-hidden">
+                    <div class="bg-navy-700 px-4 py-3 border-b border-navy-600 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-cyan-300">Crew Members</h2>
+                        <div class="flex space-x-2">
+                            <select id="crew-type-filter" class="bg-navy-900 border border-navy-600 rounded px-2 py-1 text-sm text-gray-100">
+                                <option value="">All Types</option>
+                            </select>
+                            <button id="btn-add-crew" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-700 rounded text-sm transition">
+                                + Add Crew
+                            </button>
+                        </div>
+                    </div>
+                    <div id="crew-list" class="p-4 max-h-96 overflow-y-auto">
+                        <div class="text-center text-gray-400 py-8">
+                            <p>No crew members in roster.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Roster Actions -->
+                <div class="bg-navy-800 rounded-lg shadow-xl border border-navy-700 overflow-hidden">
+                    <div class="bg-navy-700 px-4 py-3 border-b border-navy-600">
+                        <h2 class="text-lg font-semibold text-cyan-300">Roster Actions</h2>
+                    </div>
+                    <div class="p-4 grid grid-cols-2 gap-3">
+                        <button id="btn-save-roster" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-sm transition">
+                            Save Roster
+                        </button>
+                        <button id="btn-load-roster" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-sm transition">
+                            Load Roster
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div class="space-y-6">
+                <!-- Optimization Results -->
+                <div class="bg-navy-800 rounded-lg shadow-xl border border-navy-700 overflow-hidden">
+                    <div class="bg-navy-700 px-4 py-3 border-b border-navy-600 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-cyan-300">Optimization Results</h2>
+                        <span id="result-count" class="text-sm text-gray-400">0 results</span>
+                    </div>
+                    <div id="results-list" class="p-4 max-h-[800px] overflow-y-auto">
+                        <div class="text-center text-gray-400 py-8">
+                            <svg class="mx-auto h-12 w-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                            <p class="mt-2">Run optimization to see results</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-navy-800 rounded-lg p-6 shadow-2xl border border-navy-600">
+            <div class="flex items-center space-x-3">
+                <svg class="animate-spin h-8 w-8 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span id="loading-text" class="text-gray-100">Processing...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Modals -->
+    <!-- Add Captain Modal -->
+    <div id="add-captain-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-navy-800 rounded-lg p-6 shadow-2xl border border-navy-600 w-96">
+            <h3 class="text-lg font-semibold text-cyan-300 mb-4">Add Captain</h3>
+            <form id="add-captain-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                    <input type="text" id="captain-name" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Level</label>
+                    <input type="number" id="captain-level" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" value="1" min="1">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Morale</label>
+                        <input type="number" id="captain-morale" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Navigation</label>
+                        <input type="number" id="captain-navigation" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Engineering</label>
+                        <input type="number" id="captain-engineering" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Medical</label>
+                        <input type="number" id="captain-medical" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Defense</label>
+                        <input type="number" id="captain-defense" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-2 pt-4">
+                    <button type="button" id="cancel-add-captain" class="px-4 py-2 bg-navy-600 hover:bg-navy-700 rounded text-sm transition">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-sm transition">Add Captain</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Crew Modal -->
+    <div id="add-crew-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-navy-800 rounded-lg p-6 shadow-2xl border border-navy-600 w-96">
+            <h3 class="text-lg font-semibold text-cyan-300 mb-4">Add Crew Member</h3>
+            <form id="add-crew-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                    <input type="text" id="crew-name" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Type</label>
+                    <select id="crew-type" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500">
+                        <option value="Guard">Guard</option>
+                        <option value="Gunner">Gunner</option>
+                        <option value="Sailor">Sailor</option>
+                        <option value="Scholar">Scholar</option>
+                        <option value="Steward">Steward</option>
+                        <option value="Laborer">Laborer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Level</label>
+                    <input type="number" id="crew-level" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" value="1" min="1">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Morale</label>
+                        <input type="number" id="crew-morale" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Navigation</label>
+                        <input type="number" id="crew-navigation" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Engineering</label>
+                        <input type="number" id="crew-engineering" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Medical</label>
+                        <input type="number" id="crew-medical" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Defense</label>
+                        <input type="number" id="crew-defense" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-2 pt-4">
+                    <button type="button" id="cancel-add-crew" class="px-4 py-2 bg-navy-600 hover:bg-navy-700 rounded text-sm transition">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-sm transition">Add Crew</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let rosterData = { captains: [], crew: [] };
+        let ships = [];
+        let optimizationResults = [];
+
+        // API base URL
+        const API_BASE = window.location.origin;
+
+        // Initialize the application
+        $(document).ready(function() {
+            checkApiStatus();
+            loadRoster();
+            loadCrewTypes();
+            setupEventListeners();
+            
+            // Refresh status every 5 seconds
+            setInterval(checkApiStatus, 5000);
+        });
+
+        // Check API connection status
+        async function checkApiStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/api/health`);
+                if (response.ok) {
+                    $('#api-status').html('<span class="w-2 h-2 bg-green-400 rounded-full"></span><span class="text-green-400">Connected</span>');
+                } else {
+                    $('#api-status').html('<span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span><span class="text-yellow-400">API Error</span>');
+                }
+            } catch (error) {
+                $('#api-status').html('<span class="w-2 h-2 bg-red-400 rounded-full"></span><span class="text-red-400">Disconnected</span>');
+            }
+        }
+
+        // Load roster data
+        async function loadRoster() {
+            showLoading('Loading roster...');
+            try {
+                const response = await fetch(`${API_BASE}/api/roster`);
+                if (response.ok) {
+                    rosterData = await response.json();
+                    renderCaptains();
+                    renderCrew();
+                    updateCrewTypeFilter();
+                } else {
+                    showToast('Failed to load roster', 'error');
+                }
+            } catch (error) {
+                showToast('Error loading roster: ' + error.message, 'error');
+            }
+            hideLoading();
+        }
+
+        // Load crew types
+        async function loadCrewTypes() {
+            try {
+                const response = await fetch(`${API_BASE}/api/crew-types`);
+                if (response.ok) {
+                    const types = await response.json();
+                    // Crew types are already handled by the modal select
+                }
+            } catch (error) {
+                console.error('Failed to load crew types:', error);
+            }
+        }
+
+        // Render captains list
+        function renderCaptains() {
+            if (rosterData.captains.length === 0) {
+                $('#captains-list').html('<div class="text-center text-gray-400 py-8"><p>No captains in roster. Add one or load a roster file.</p></div>');
+                return;
+            }
+
+            let html = '<div class="space-y-3">';
+            rosterData.captains.forEach((captain, index) => {
+                html += `
+                    <div class="captain-card bg-navy-900 rounded-lg border border-navy-600 p-3 hover:border-cyan-500 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-medium text-cyan-300">${captain.name}</h3>
+                                <p class="text-xs text-gray-400">Level ${captain.level || 1}</p>
+                            </div>
+                            <button class="btn-remove-captain text-red-400 hover:text-red-300 text-sm" data-index="${index}">X</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 text-xs">
+                            <div><span class="text-gray-400">Morale:</span> <span class="text-gray-100">${captain.stats.morale}</span></div>
+                            <div><span class="text-gray-400">Navigation:</span> <span class="text-gray-100">${captain.stats.navigation}</span></div>
+                            <div><span class="text-gray-400">Engineering:</span> <span class="text-gray-100">${captain.stats.engineering}</span></div>
+                            <div><span class="text-gray-400">Medical:</span> <span class="text-gray-100">${captain.stats.medical}</span></div>
+                            <div><span class="text-gray-400">Defense:</span> <span class="text-gray-100">${captain.stats.defense}</span></div>
+                        </div>
+                        ${captain.traits && Object.keys(captain.traits).length > 0 ? `
+                            <div class="mt-2 pt-2 border-t border-navy-700">
+                                <p class="text-xs text-gray-400 mb-1">Traits:</p>
+                                <div class="flex flex-wrap gap-1">
+                                    ${Object.entries(captain.traits).map(([key, value]) => `
+                                        <span class="px-2 py-0.5 bg-cyan-900 rounded text-xs">${key}: ${value}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            html += '</div>';
+            $('#captains-list').html(html);
+        }
+
+        // Render crew list
+        function renderCrew(filter = '') {
+            let crew = rosterData.crew;
+            if (filter) {
+                crew = crew.filter(c => c.type === filter);
+            }
+
+            if (crew.length === 0) {
+                $('#crew-list').html('<div class="text-center text-gray-400 py-8"><p>No crew members found.</p></div>');
+                return;
+            }
+
+            let html = '<div class="grid grid-cols-2 gap-3">';
+            crew.forEach((member, originalIndex) => {
+                const actualIndex = rosterData.crew.indexOf(member);
+                html += `
+                    <div class="crew-card bg-navy-900 rounded-lg border border-navy-600 p-3 hover:border-cyan-500 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-medium text-cyan-300">${member.name}</h3>
+                                <p class="text-xs text-gray-400">${member.type} | Level ${member.level || 1}</p>
+                            </div>
+                            <button class="btn-remove-crew text-red-400 hover:text-red-300 text-sm" data-index="${actualIndex}">X</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 text-xs">
+                            <div><span class="text-gray-400">Morale:</span> <span class="text-gray-100">${member.stats.morale}</span></div>
+                            <div><span class="text-gray-400">Navigation:</span> <span class="text-gray-100">${member.stats.navigation}</span></div>
+                            <div><span class="text-gray-400">Engineering:</span> <span class="text-gray-100">${member.stats.engineering}</span></div>
+                            <div><span class="text-gray-400">Medical:</span> <span class="text-gray-100">${member.stats.medical}</span></div>
+                            <div><span class="text-gray-400">Defense:</span> <span class="text-gray-100">${member.stats.defense}</span></div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            $('#crew-list').html(html);
+        }
+
+        // Update crew type filter dropdown
+        function updateCrewTypeFilter() {
+            const types = [...new Set(rosterData.crew.map(c => c.type))];
+            let html = '<option value="">All Types</option>';
+            types.forEach(type => {
+                html += `<option value="${type}">${type}</option>`;
+            });
+            $('#crew-type-filter').html(html);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Refresh button
+            $('#btn-refresh').click(function() {
+                loadRoster();
+                checkApiStatus();
+            });
+
+            // Add captain button
+            $('#btn-add-captain').click(function() {
+                $('#add-captain-modal').removeClass('hidden').addClass('flex');
+            });
+
+            // Cancel add captain
+            $('#cancel-add-captain').click(function() {
+                $('#add-captain-modal').removeClass('flex').addClass('hidden');
+                $('#add-captain-form')[0].reset();
+            });
+
+            // Add captain form submit
+            $('#add-captain-form').submit(function(e) {
+                e.preventDefault();
+                const captain = {
+                    name: $('#captain-name').val(),
+                    level: parseInt($('#captain-level').val()) || 1,
+                    stats: {
+                        morale: parseInt($('#captain-morale').val()) || 0,
+                        navigation: parseInt($('#captain-navigation').val()) || 0,
+                        engineering: parseInt($('#captain-engineering').val()) || 0,
+                        medical: parseInt($('#captain-medical').val()) || 0,
+                        defense: parseInt($('#captain-defense').val()) || 0
+                    },
+                    traits: {}
+                };
+                rosterData.captains.push(captain);
+                renderCaptains();
+                $('#add-captain-modal').removeClass('flex').addClass('hidden');
+                $('#add-captain-form')[0].reset();
+                showToast('Captain added successfully', 'success');
+            });
+
+            // Remove captain
+            $(document).on('click', '.btn-remove-captain', function() {
+                const index = parseInt($(this).data('index'));
+                rosterData.captains.splice(index, 1);
+                renderCaptains();
+                showToast('Captain removed', 'info');
+            });
+
+            // Add crew button
+            $('#btn-add-crew').click(function() {
+                $('#add-crew-modal').removeClass('hidden').addClass('flex');
+            });
+
+            // Cancel add crew
+            $('#cancel-add-crew').click(function() {
+                $('#add-crew-modal').removeClass('flex').addClass('hidden');
+                $('#add-crew-form')[0].reset();
+            });
+
+            // Add crew form submit
+            $('#add-crew-form').submit(function(e) {
+                e.preventDefault();
+                const crewMember = {
+                    name: $('#crew-name').val(),
+                    type: $('#crew-type').val(),
+                    level: parseInt($('#crew-level').val()) || 1,
+                    stats: {
+                        morale: parseInt($('#crew-morale').val()) || 0,
+                        navigation: parseInt($('#crew-navigation').val()) || 0,
+                        engineering: parseInt($('#crew-engineering').val()) || 0,
+                        medical: parseInt($('#crew-medical').val()) || 0,
+                        defense: parseInt($('#crew-defense').val()) || 0
+                    }
+                };
+                rosterData.crew.push(crewMember);
+                renderCrew();
+                updateCrewTypeFilter();
+                $('#add-crew-modal').removeClass('flex').addClass('hidden');
+                $('#add-crew-form')[0].reset();
+                showToast('Crew member added successfully', 'success');
+            });
+
+            // Remove crew
+            $(document).on('click', '.btn-remove-crew', function() {
+                const index = parseInt($(this).data('index'));
+                rosterData.crew.splice(index, 1);
+                renderCrew();
+                updateCrewTypeFilter();
+                showToast('Crew member removed', 'info');
+            });
+
+            // Crew type filter
+            $('#crew-type-filter').change(function() {
+                const filter = $(this).val();
+                renderCrew(filter);
+            });
+
+            // Save roster
+            $('#btn-save-roster').click(function() {
+                saveRoster();
+            });
+
+            // Load roster
+            $('#btn-load-roster').click(function() {
+                $('#file-input').trigger('click');
+            });
+
+            // Hidden file input
+            $('<input type="file" id="file-input" accept=".json" class="hidden">').appendTo('body');
+            $('#file-input').change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            rosterData = data;
+                            renderCaptains();
+                            renderCrew();
+                            updateCrewTypeFilter();
+                            showToast('Roster loaded successfully', 'success');
+                        } catch (error) {
+                            showToast('Error loading roster: Invalid JSON', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            });
+
+            // Optimize button
+            $('#btn-optimize').click(function() {
+                runOptimization();
+            });
+
+            // Loading overlay click prevention
+            $('#loading-overlay').click(function(e) {
+                if (e.target === this) {
+                    return false;
+                }
+            });
+        }
+
+        // Save roster to file
+        async function saveRoster() {
+            showLoading('Saving roster...');
+            try {
+                const response = await fetch(`${API_BASE}/api/roster`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(rosterData)
+                });
+                if (response.ok) {
+                    showToast('Roster saved successfully', 'success');
+                } else {
+                    showToast('Failed to save roster', 'error');
+                }
+            } catch (error) {
+                showToast('Error saving roster: ' + error.message, 'error');
+            }
+            hideLoading();
+        }
+
+        // Run optimization
+        async function runOptimization() {
+            const targets = {
+                morale: parseInt($('#morale-target').val()) || 0,
+                navigation: parseInt($('#navigation-target').val()) || 0,
+                engineering: parseInt($('#engineering-target').val()) || 0,
+                medical: parseInt($('#medical-target').val()) || 0,
+                defense: parseInt($('#defense-target').val()) || 0
+            };
+
+            if (targets.morale === 0 && targets.navigation === 0 && targets.engineering === 0 && targets.medical === 0 && targets.defense === 0) {
+                showToast('Please enter at least one voyage target', 'error');
+                return;
+            }
+
+            if (rosterData.captains.length === 0) {
+                showToast('No captains available', 'error');
+                return;
+            }
+
+            if (rosterData.crew.length === 0) {
+                showToast('No crew members available', 'error');
+                return;
+            }
+
+            showLoading('Running optimization...');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/optimize`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        targets: targets,
+                        captains: rosterData.captains,
+                        crew: rosterData.crew,
+                        max_results: 10
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    optimizationResults = result.results || [];
+                    renderResults();
+                    showToast(`Found ${optimizationResults.length} results`, 'success');
+                } else {
+                    const error = await response.json();
+                    showToast('Optimization failed: ' + (error.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                showToast('Error running optimization: ' + error.message, 'error');
+            }
+
+            hideLoading();
+        }
+
+        // Render optimization results
+        function renderResults() {
+            if (optimizationResults.length === 0) {
+                $('#results-list').html('<div class="text-center text-gray-400 py-8"><p>No valid assignments found</p></div>');
+                $('#result-count').text('0 results');
+                return;
+            }
+
+            $('#result-count').text(`${optimizationResults.length} results`);
+
+            let html = '<div class="space-y-4">';
+            optimizationResults.forEach((result, index) => {
+                html += `
+                    <div class="bg-navy-900 rounded-lg border border-navy-600 p-4 hover:border-cyan-500 transition">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="font-medium text-cyan-300">Assignment #${index + 1}</h3>
+                                <p class="text-sm text-gray-400">Score: <span class="text-cyan-400 font-medium">${result.score.toFixed(2)}</span></p>
+                            </div>
+                            <span class="px-2 py-1 ${result.meets_targets ? 'bg-green-900 text-green-300' : 'bg-yellow-900 text-yellow-300'} rounded text-xs">
+                                ${result.meets_targets ? 'Meets Targets' : 'Partial'}
+                            </span>
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-sm text-gray-400 mb-1">Captain: <span class="text-gray-100 font-medium">${result.assignment.captain_name}</span></p>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div><span class="text-gray-400">Morale:</span> <span class="text-gray-100">${result.final_stats.morale}</span></div>
+                                <div><span class="text-gray-400">Navigation:</span> <span class="text-gray-100">${result.final_stats.navigation}</span></div>
+                                <div><span class="text-gray-400">Engineering:</span> <span class="text-gray-100">${result.final_stats.engineering}</span></div>
+                                <div><span class="text-gray-400">Medical:</span> <span class="text-gray-100">${result.final_stats.medical}</span></div>
+                                <div><span class="text-gray-400">Defense:</span> <span class="text-gray-100">${result.final_stats.defense}</span></div>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-navy-700">
+                            <p class="text-xs text-gray-400 mb-1">Crew (${result.assignment.crew_names.length} members):</p>
+                            <div class="flex flex-wrap gap-1">
+                                ${result.assignment.crew_names.map(name => `<span class="px-2 py-0.5 bg-navy-700 rounded text-xs">${name}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            $('#results-list').html(html);
+        }
+
+        // Show loading overlay
+        function showLoading(text = 'Processing...') {
+            $('#loading-text').text(text);
+            $('#loading-overlay').removeClass('hidden').addClass('flex');
+        }
+
+        // Hide loading overlay
+        function hideLoading() {
+            $('#loading-overlay').removeClass('flex').addClass('hidden');
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const colors = {
+                success: 'bg-green-600',
+                error: 'bg-red-600',
+                info: 'bg-cyan-600',
+                warning: 'bg-yellow-600'
+            };
+            const icons = {
+                success: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>',
+                error: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>',
+                info: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+                warning: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>'
+            };
+
+            const toast = $(`
+                <div class="toast ${colors[type]} rounded-lg shadow-lg p-4 flex items-center space-x-3 max-w-sm animate-slide-up">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        ${icons[type]}
+                    </svg>
+                    <p class="text-sm text-white">${message}</p>
+                </div>
+            `);
+
+            $('#toast-container').append(toast);
+
+            setTimeout(() => {
+                toast.fadeOut(300, function() {
+                    $(this).remove();
+                });
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

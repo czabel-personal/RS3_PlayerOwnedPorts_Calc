@@ -13,6 +13,7 @@ import sys
 import os
 
 import flask
+from flask import render_template
 import webview
 
 # Import Flask API app
@@ -124,73 +125,14 @@ def create_app():
     Returns:
         Configured Flask app instance.
     """
-    # Create a simple route to serve the placeholder HTML
+    # Configure template folder
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    flask_app.template_folder = os.path.join(current_dir, 'templates')
+    
+    # Route to serve the Phase 4 frontend UI
     @flask_app.route("/")
     def index():
-        return """<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ship Crew Optimizer</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #1a1a2e;
-            color: #e0e0e0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            text-align: center;
-            padding: 40px;
-            background: #16213e;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
-        }
-        h1 {
-            color: #00d4ff;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-        p {
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-        .status {
-            margin-top: 20px;
-            padding: 15px;
-            background: #0f3460;
-            border-radius: 8px;
-            font-size: 0.95em;
-        }
-        .version {
-            margin-top: 30px;
-            font-size: 0.85em;
-            color: #888;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Ship Crew Optimizer</h1>
-        <p>Phase 3: PyWebView Integration</p>
-        <p>API Server: <strong id="api-url">Loading...</strong></p>
-        <div class="status">
-            Frontend UI will be available in Phase 4.<br>
-            The API is running and ready for requests.
-        </div>
-        <div class="version">v1.0.0 - Phase 3</div>
-    </div>
-    <script>
-        document.getElementById('api-url').textContent = window.location.origin;
-    </script>
-</body>
-</html>"""
+        return render_template('index.html')
 
     return flask_app
 
