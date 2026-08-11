@@ -1,0 +1,14 @@
+# Ship Crew Optimizer - Dependencies
+
+# Phase 1: Data Models & JSON I/O (stdlib - no external dependencies)
+# dataclasses (Python 3.7+)
+# itertools (Python 3.7+)
+
+# Phase 2: Flask API Layer
+flask>=3.0.0
+
+# Phase 3: PyWebView Integration
+pywebview>=4.0.0
+
+# Testing
+pytest>=7.0.0

@@ -1,0 +1,149 @@
+{
+  "captains": [
+    {
+      "name": "Admiral Horatio Nelson",
+      "stats": {
+        "morale": 25,
+        "combat": 35,
+        "seafaring": 30
+      },
+      "traits": {
+        "combat": 0.10,
+        "general_bonus": 0.05
+      }
+    },
+    {
+      "name": "Captain James Hook",
+      "stats": {
+        "morale": 20,
+        "combat": 28,
+        "seafaring": 35
+      },
+      "traits": {
+        "seafaring": 0.12,
+        "general_bonus": 0.03
+      }
+    },
+    {
+      "name": "Captain Elizabeth Swann",
+      "stats": {
+        "morale": 30,
+        "combat": 22,
+        "seafaring": 28
+      },
+      "traits": {
+        "morale": 0.08,
+        "general_bonus": 0.04
+      }
+    },
+    {
+      "name": "Blackbeard",
+      "stats": {
+        "morale": 18,
+        "combat": 40,
+        "seafaring": 15
+      },
+      "traits": {
+        "combat": 0.15
+      }
+    }
+  ],
+  "crew": [
+    {
+      "name": "Quartermaster Sneed",
+      "stats": {
+        "morale": 12,
+        "combat": 18,
+        "seafaring": 15
+      }
+    },
+    {
+      "name": "Gunner Billy Bones",
+      "stats": {
+        "morale": 8,
+        "combat": 22,
+        "seafaring": 10
+      }
+    },
+    {
+      "name": "Navigator Horace Dooley",
+      "stats": {
+        "morale": 10,
+        "combat": 12,
+        "seafaring": 25
+      }
+    },
+    {
+      "name": "Boatswain Joshamee Gibbs",
+      "stats": {
+        "morale": 18,
+        "combat": 14,
+        "seafaring": 20
+      }
+    },
+    {
+      "name": "Medic Cotton",
+      "stats": {
+        "morale": 15,
+        "combat": 8,
+        "seafaring": 12
+      }
+    },
+    {
+      "name": "Cabin Boy Parker",
+      "stats": {
+        "morale": 6,
+        "combat": 10,
+        "seafaring": 18
+      }
+    },
+    {
+      "name": "First Mate Norrington",
+      "stats": {
+        "morale": 14,
+        "combat": 20,
+        "seafaring": 16
+      }
+    },
+    {
+      "name": "Sailor Ragetti",
+      "stats": {
+        "morale": 8,
+        "combat": 12,
+        "seafaring": 14
+      }
+    },
+    {
+      "name": "Pintel",
+      "stats": {
+        "morale": 10,
+        "combat": 16,
+        "seafaring": 10
+      }
+    },
+    {
+      "name": "Murtogg",
+      "stats": {
+        "morale": 12,
+        "combat": 18,
+        "seafaring": 8
+      }
+    },
+    {
+      "name": "Molloy",
+      "stats": {
+        "morale": 10,
+        "combat": 16,
+        "seafaring": 12
+      }
+    },
+    {
+      "name": "Scrum",
+      "stats": {
+        "morale": 8,
+        "combat": 14,
+        "seafaring": 10
+      }
+    }
+  ]
+}

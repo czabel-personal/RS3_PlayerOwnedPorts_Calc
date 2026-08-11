@@ -1,0 +1,54 @@
+{
+  "ship_name": "HMS Black Pearl",
+  "upgrades": {
+    "morale": 10,
+    "combat": 25,
+    "seafaring": 15
+  },
+  "active_building_bonuses": {
+    "morale": 0.10,
+    "combat": 0.05,
+    "seafaring": 0.08
+  },
+  "active_consumables": [
+    {
+      "name": "Premium Rum",
+      "flat_stats": {
+        "morale": 8,
+        "combat": 0,
+        "seafaring": 0
+      },
+      "percentage_stats": {
+        "morale": 0.05,
+        "combat": 0,
+        "seafaring": 0
+      }
+    },
+    {
+      "name": "Cannon Fire Powder",
+      "flat_stats": {
+        "morale": 0,
+        "combat": 12,
+        "seafaring": 0
+      },
+      "percentage_stats": {
+        "morale": 0,
+        "combat": 0.08,
+        "seafaring": 0
+      }
+    },
+    {
+      "name": "Navigator's Chart",
+      "flat_stats": {
+        "morale": 0,
+        "combat": 0,
+        "seafaring": 10
+      },
+      "percentage_stats": {
+        "morale": 0,
+        "combat": 0,
+        "seafaring": 0.10
+      }
+    }
+  ]
+}

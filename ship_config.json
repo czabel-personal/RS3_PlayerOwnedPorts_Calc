@@ -1,0 +1,17 @@
+{
+  "ship_name": "",
+  "captain": null,
+  "crew": [],
+  "equipment": {
+    "Ram/Figurehead": null,
+    "Hull": null,
+    "Deck Item 1": null,
+    "Deck Item 2": null
+  },
+  "active_building_bonuses": {
+    "morale": 0.0,
+    "combat": 0.0,
+    "seafaring": 0.0
+  },
+  "active_consumables": []
+}

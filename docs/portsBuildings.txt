@@ -1,0 +1,11 @@
+Shipwright type,Effect
+Dilapidated shipwright,No bonus
+Refitted shipwright,Boosts ship stats by 2%
+Renovated shipwright,Boosts ship stats by 3%
+Nautical shipwright,Boost ship stats by 3% and Seafaring by an additional 2%.
+Warship shipwright,Boost ship stats by 3% and Combat by an additional 2%.
+Luxurious shipwright,Boost ship stats by 3% and Morale by an additional 2%.
+Sleek shipwright,Boost ship stats by 3% and Speed by an additional 2%.
+Ostentatious shipwright,Boost ship stats by 5% and Morale by an additional 3%.
+Battleship shipwright,Boost ship stats by 5% and Combat by an additional 3%.
+Maritime shipwright,Boost ship stats by 5% and Seafaring by an additional 3%.
