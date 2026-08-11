@@ -422,6 +422,34 @@ def api_get_shipwright_types():
     })
 
 
+@app.route('/api/config', methods=['GET'])
+def api_get_config():
+    """
+    Get application configuration constants.
+    
+    Returns:
+    {
+        "success": true,
+        "config": {
+            "max_captains": 5,
+            "max_crew": 25,
+            "crew_types": [...],
+            "shipwright_types": [...]
+        }
+    }
+    """
+    from models import MAX_CAPTAINS, MAX_CREW, CREW_TYPES, SHIPWRIGHT_TYPES
+    return jsonify({
+        "success": True,
+        "config": {
+            "max_captains": MAX_CAPTAINS,
+            "max_crew": MAX_CREW,
+            "crew_types": CREW_TYPES,
+            "shipwright_types": SHIPWRIGHT_TYPES
+        }
+    })
+
+
 @app.route('/api/health', methods=['GET'])
 def api_health():
     """

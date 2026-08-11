@@ -46,7 +46,7 @@
                     <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
-                    <h1 class="text-2xl font-bold text-cyan-400">Ship Crew Optimizer</h1>
+                    <h1 class="text-2xl font-semibold text-cyan-400">Ship Crew Optimizer</h1>
                 </div>
                 <div class="flex items-center space-x-4">
                     <span id="api-status" class="flex items-center space-x-2 text-sm">
@@ -78,20 +78,12 @@
                             <input type="number" id="morale-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 300">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-1">Navigation Target</label>
-                            <input type="number" id="navigation-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 250">
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Combat Target</label>
+                            <input type="number" id="combat-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 250">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-1">Engineering Target</label>
-                            <input type="number" id="engineering-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 200">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-1">Medical Target</label>
-                            <input type="number" id="medical-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 150">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-1">Defense Target</label>
-                            <input type="number" id="defense-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 180">
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Seafaring Target</label>
+                            <input type="number" id="seafaring-target" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" placeholder="e.g., 180">
                         </div>
                     </div>
                 </div>
@@ -126,36 +118,21 @@
             <div class="space-y-6">
                 <!-- Captains Section -->
                 <div class="bg-navy-800 rounded-lg shadow-xl border border-navy-700 overflow-hidden">
-                    <div class="bg-navy-700 px-4 py-3 border-b border-navy-600 flex justify-between items-center">
-                        <h2 class="text-lg font-semibold text-cyan-300">Captains</h2>
-                        <button id="btn-add-captain" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-700 rounded text-sm transition">
-                            + Add Captain
-                        </button>
+                    <div class="bg-navy-700 px-4 py-3 border-b border-navy-600">
+                        <h2 class="text-lg font-semibold text-cyan-300">Captains (<span id="captains-slot-count">5</span> Slots)</h2>
                     </div>
-                    <div id="captains-list" class="p-4 max-h-96 overflow-y-auto">
-                        <div class="text-center text-gray-400 py-8">
-                            <p>No captains in roster. Add one or load a roster file.</p>
-                        </div>
+                    <div id="captains-list" class="p-4 space-y-3 max-h-[500px] overflow-y-auto">
+                        <!-- Captain slots will be rendered here -->
                     </div>
                 </div>
 
                 <!-- Crew Section -->
                 <div class="bg-navy-800 rounded-lg shadow-xl border border-navy-700 overflow-hidden">
-                    <div class="bg-navy-700 px-4 py-3 border-b border-navy-600 flex justify-between items-center">
-                        <h2 class="text-lg font-semibold text-cyan-300">Crew Members</h2>
-                        <div class="flex space-x-2">
-                            <select id="crew-type-filter" class="bg-navy-900 border border-navy-600 rounded px-2 py-1 text-sm text-gray-100">
-                                <option value="">All Types</option>
-                            </select>
-                            <button id="btn-add-crew" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-700 rounded text-sm transition">
-                                + Add Crew
-                            </button>
-                        </div>
+                    <div class="bg-navy-700 px-4 py-3 border-b border-navy-600">
+                        <h2 class="text-lg font-semibold text-cyan-300">Crew Members (<span id="crew-slot-count">10</span> Slots)</h2>
                     </div>
-                    <div id="crew-list" class="p-4 max-h-96 overflow-y-auto">
-                        <div class="text-center text-gray-400 py-8">
-                            <p>No crew members in roster.</p>
-                        </div>
+                    <div id="crew-list" class="p-4 space-y-3 max-h-[500px] overflow-y-auto">
+                        <!-- Crew slots will be rendered here -->
                     </div>
                 </div>
 
@@ -213,106 +190,11 @@
     <!-- Toast Notifications -->
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
 
-    <!-- Modals -->
-    <!-- Add Captain Modal -->
-    <div id="add-captain-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-navy-800 rounded-lg p-6 shadow-2xl border border-navy-600 w-96">
-            <h3 class="text-lg font-semibold text-cyan-300 mb-4">Add Captain</h3>
-            <form id="add-captain-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
-                    <input type="text" id="captain-name" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Level</label>
-                    <input type="number" id="captain-level" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" value="1" min="1">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Morale</label>
-                        <input type="number" id="captain-morale" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Navigation</label>
-                        <input type="number" id="captain-navigation" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Engineering</label>
-                        <input type="number" id="captain-engineering" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Medical</label>
-                        <input type="number" id="captain-medical" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Defense</label>
-                        <input type="number" id="captain-defense" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-2 pt-4">
-                    <button type="button" id="cancel-add-captain" class="px-4 py-2 bg-navy-600 hover:bg-navy-700 rounded text-sm transition">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-sm transition">Add Captain</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Add Crew Modal -->
-    <div id="add-crew-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-navy-800 rounded-lg p-6 shadow-2xl border border-navy-600 w-96">
-            <h3 class="text-lg font-semibold text-cyan-300 mb-4">Add Crew Member</h3>
-            <form id="add-crew-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
-                    <input type="text" id="crew-name" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Type</label>
-                    <select id="crew-type" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500">
-                        <option value="Guard">Guard</option>
-                        <option value="Gunner">Gunner</option>
-                        <option value="Sailor">Sailor</option>
-                        <option value="Scholar">Scholar</option>
-                        <option value="Steward">Steward</option>
-                        <option value="Laborer">Laborer</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Level</label>
-                    <input type="number" id="crew-level" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" value="1" min="1">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Morale</label>
-                        <input type="number" id="crew-morale" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Navigation</label>
-                        <input type="number" id="crew-navigation" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Engineering</label>
-                        <input type="number" id="crew-engineering" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Medical</label>
-                        <input type="number" id="crew-medical" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Defense</label>
-                        <input type="number" id="crew-defense" class="w-full bg-navy-900 border border-navy-600 rounded px-3 py-2 text-gray-100 focus:outline-none focus:border-cyan-500" required>
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-2 pt-4">
-                    <button type="button" id="cancel-add-crew" class="px-4 py-2 bg-navy-600 hover:bg-navy-700 rounded text-sm transition">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-sm transition">Add Crew</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
-        // Global state
+        // Global state - will be overwritten by API config
+        let MAX_CAPTAIN_SLOTS = 5;
+        let MAX_CREW_SLOTS = 10;
+        let CREW_TYPES = ['Guard', 'Gunner', 'Sailor', 'Scholar', 'Steward', 'Laborer'];
         let rosterData = { captains: [], crew: [] };
         let ships = [];
         let optimizationResults = [];
@@ -322,14 +204,46 @@
 
         // Initialize the application
         $(document).ready(function() {
+            loadAppConfig();
+        });
+
+        // Load application configuration from API
+        async function loadAppConfig() {
+            showLoading('Loading configuration...');
+            try {
+                const response = await fetch(`${API_BASE}/api/config`);
+                if (response.ok) {
+                    const config = await response.json();
+                    if (config.success && config.config) {
+                        MAX_CAPTAIN_SLOTS = config.config.max_captains || 5;
+                        MAX_CREW_SLOTS = config.config.max_crew || 25;
+                        CREW_TYPES = config.config.crew_types || CREW_TYPES;
+                        
+                        // Update UI with dynamic values
+                        $('#captains-slot-count').text(MAX_CAPTAIN_SLOTS);
+                        $('#crew-slot-count').text(MAX_CREW_SLOTS);
+                        
+                        console.log('Configuration loaded:', {
+                            max_captains: MAX_CAPTAIN_SLOTS,
+                            max_crew: MAX_CREW_SLOTS,
+                            crew_types_count: CREW_TYPES.length
+                        });
+                    }
+                } else {
+                    console.warn('Failed to load config, using defaults');
+                }
+            } catch (error) {
+                console.warn('Error loading config, using defaults:', error.message);
+            }
+            
+            hideLoading();
             checkApiStatus();
             loadRoster();
-            loadCrewTypes();
             setupEventListeners();
             
             // Refresh status every 5 seconds
             setInterval(checkApiStatus, 5000);
-        });
+        }
 
         // Check API connection status
         async function checkApiStatus() {
@@ -354,7 +268,6 @@
                     rosterData = await response.json();
                     renderCaptains();
                     renderCrew();
-                    updateCrewTypeFilter();
                 } else {
                     showToast('Failed to load roster', 'error');
                 }
@@ -364,107 +277,141 @@
             hideLoading();
         }
 
-        // Load crew types
-        async function loadCrewTypes() {
-            try {
-                const response = await fetch(`${API_BASE}/api/crew-types`);
-                if (response.ok) {
-                    const types = await response.json();
-                    // Crew types are already handled by the modal select
-                }
-            } catch (error) {
-                console.error('Failed to load crew types:', error);
-            }
-        }
-
-        // Render captains list
+        // Render captains list with dynamic slots
         function renderCaptains() {
-            if (rosterData.captains.length === 0) {
-                $('#captains-list').html('<div class="text-center text-gray-400 py-8"><p>No captains in roster. Add one or load a roster file.</p></div>');
-                return;
-            }
+            let html = '';
+            
+            for (let i = 0; i < MAX_CAPTAIN_SLOTS; i++) {
+                const captain = rosterData.captains[i] || {
+                    name: '',
+                    level: 1,
+                    stats: {
+                        morale: '',
+                        navigation: '',
+                        engineering: '',
+                        medical: '',
+                        defense: ''
+                    },
+                    traits: {}
+                };
 
-            let html = '<div class="space-y-3">';
-            rosterData.captains.forEach((captain, index) => {
                 html += `
                     <div class="captain-card bg-navy-900 rounded-lg border border-navy-600 p-3 hover:border-cyan-500 transition">
-                        <div class="flex justify-between items-start mb-2">
+                        <div class="mb-2">
+                            <label class="block text-xs font-medium text-gray-400 mb-1">Name</label>
+                            <input type="text" class="captain-name-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                   placeholder="Captain name" value="${captain.name || ''}" data-index="${i}" data-field="name">
+                        </div>
+                        <div class="mb-2">
+                            <label class="block text-xs font-medium text-gray-400 mb-1">Level</label>
+                            <input type="number" class="captain-level-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                   value="${captain.level || 1}" min="1" data-index="${i}" data-field="level">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
                             <div>
-                                <h3 class="font-medium text-cyan-300">${captain.name}</h3>
-                                <p class="text-xs text-gray-400">Level ${captain.level || 1}</p>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Morale</label>
+                                <input type="number" class="captain-stat-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${captain.stats.morale || ''}" placeholder="0" data-index="${i}" data-field="morale">
                             </div>
-                            <button class="btn-remove-captain text-red-400 hover:text-red-300 text-sm" data-index="${index}">X</button>
-                        </div>
-                        <div class="grid grid-cols-2 gap-1 text-xs">
-                            <div><span class="text-gray-400">Morale:</span> <span class="text-gray-100">${captain.stats.morale}</span></div>
-                            <div><span class="text-gray-400">Navigation:</span> <span class="text-gray-100">${captain.stats.navigation}</span></div>
-                            <div><span class="text-gray-400">Engineering:</span> <span class="text-gray-100">${captain.stats.engineering}</span></div>
-                            <div><span class="text-gray-400">Medical:</span> <span class="text-gray-100">${captain.stats.medical}</span></div>
-                            <div><span class="text-gray-400">Defense:</span> <span class="text-gray-100">${captain.stats.defense}</span></div>
-                        </div>
-                        ${captain.traits && Object.keys(captain.traits).length > 0 ? `
-                            <div class="mt-2 pt-2 border-t border-navy-700">
-                                <p class="text-xs text-gray-400 mb-1">Traits:</p>
-                                <div class="flex flex-wrap gap-1">
-                                    ${Object.entries(captain.traits).map(([key, value]) => `
-                                        <span class="px-2 py-0.5 bg-cyan-900 rounded text-xs">${key}: ${value}</span>
-                                    `).join('')}
-                                </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Navigation</label>
+                                <input type="number" class="captain-stat-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${captain.stats.navigation || ''}" placeholder="0" data-index="${i}" data-field="navigation">
                             </div>
-                        ` : ''}
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Engineering</label>
+                                <input type="number" class="captain-stat-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${captain.stats.engineering || ''}" placeholder="0" data-index="${i}" data-field="engineering">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Medical</label>
+                                <input type="number" class="captain-stat-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${captain.stats.medical || ''}" placeholder="0" data-index="${i}" data-field="medical">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Defense</label>
+                                <input type="number" class="captain-stat-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${captain.stats.defense || ''}" placeholder="0" data-index="${i}" data-field="defense">
+                            </div>
+                        </div>
                     </div>
                 `;
-            });
-            html += '</div>';
+            }
+            
             $('#captains-list').html(html);
         }
 
-        // Render crew list
-        function renderCrew(filter = '') {
-            let crew = rosterData.crew;
-            if (filter) {
-                crew = crew.filter(c => c.type === filter);
-            }
+        // Render crew list with dynamic slots and crew types from API
+        function renderCrew() {
+            let html = '';
 
-            if (crew.length === 0) {
-                $('#crew-list').html('<div class="text-center text-gray-400 py-8"><p>No crew members found.</p></div>');
-                return;
-            }
+            for (let i = 0; i < MAX_CREW_SLOTS; i++) {
+                const crewMember = rosterData.crew[i] || {
+                    name: '',
+                    type: CREW_TYPES[i % CREW_TYPES.length],
+                    level: 1,
+                    stats: {
+                        morale: '',
+                        navigation: '',
+                        engineering: '',
+                        medical: '',
+                        defense: ''
+                    }
+                };
 
-            let html = '<div class="grid grid-cols-2 gap-3">';
-            crew.forEach((member, originalIndex) => {
-                const actualIndex = rosterData.crew.indexOf(member);
                 html += `
                     <div class="crew-card bg-navy-900 rounded-lg border border-navy-600 p-3 hover:border-cyan-500 transition">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <h3 class="font-medium text-cyan-300">${member.name}</h3>
-                                <p class="text-xs text-gray-400">${member.type} | Level ${member.level || 1}</p>
-                            </div>
-                            <button class="btn-remove-crew text-red-400 hover:text-red-300 text-sm" data-index="${actualIndex}">X</button>
+                        <div class="mb-2">
+                            <label class="block text-xs font-medium text-gray-400 mb-1">Name</label>
+                            <input type="text" class="crew-name-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                   placeholder="Crew name" value="${crewMember.name || ''}" data-index="${i}" data-field="name">
                         </div>
-                        <div class="grid grid-cols-2 gap-1 text-xs">
-                            <div><span class="text-gray-400">Morale:</span> <span class="text-gray-100">${member.stats.morale}</span></div>
-                            <div><span class="text-gray-400">Navigation:</span> <span class="text-gray-100">${member.stats.navigation}</span></div>
-                            <div><span class="text-gray-400">Engineering:</span> <span class="text-gray-100">${member.stats.engineering}</span></div>
-                            <div><span class="text-gray-400">Medical:</span> <span class="text-gray-100">${member.stats.medical}</span></div>
-                            <div><span class="text-gray-400">Defense:</span> <span class="text-gray-100">${member.stats.defense}</span></div>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Type</label>
+                                <select class="crew-type-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                        data-index="${i}" data-field="type">
+                                    ${CREW_TYPES.map(type => `<option value="${type}" ${crewMember.type === type ? 'selected' : ''}>${type}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Level</label>
+                                <input type="number" class="crew-level-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${crewMember.level || 1}" min="1" data-index="${i}" data-field="level">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Morale</label>
+                                <input type="number" class="crew-stat-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${crewMember.stats.morale || ''}" placeholder="0" data-index="${i}" data-field="morale">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Navigation</label>
+                                <input type="number" class="crew-stat-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${crewMember.stats.navigation || ''}" placeholder="0" data-index="${i}" data-field="navigation">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Engineering</label>
+                                <input type="number" class="crew-stat-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${crewMember.stats.engineering || ''}" placeholder="0" data-index="${i}" data-field="engineering">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Medical</label>
+                                <input type="number" class="crew-stat-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${crewMember.stats.medical || ''}" placeholder="0" data-index="${i}" data-field="medical">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Defense</label>
+                                <input type="number" class="crew-stat-input w-full bg-navy-800 border border-navy-600 rounded px-2 py-1 text-gray-100 text-sm focus:outline-none focus:border-cyan-500" 
+                                       value="${crewMember.stats.defense || ''}" placeholder="0" data-index="${i}" data-field="defense">
+                            </div>
                         </div>
                     </div>
                 `;
-            });
-            html += '</div>';
+            }
+            
             $('#crew-list').html(html);
-        }
-
-        // Update crew type filter dropdown
-        function updateCrewTypeFilter() {
-            const types = [...new Set(rosterData.crew.map(c => c.type))];
-            let html = '<option value="">All Types</option>';
-            types.forEach(type => {
-                html += `<option value="${type}">${type}</option>`;
-            });
-            $('#crew-type-filter').html(html);
         }
 
         // Setup event listeners
@@ -475,98 +422,9 @@
                 checkApiStatus();
             });
 
-            // Add captain button
-            $('#btn-add-captain').click(function() {
-                $('#add-captain-modal').removeClass('hidden').addClass('flex');
-            });
-
-            // Cancel add captain
-            $('#cancel-add-captain').click(function() {
-                $('#add-captain-modal').removeClass('flex').addClass('hidden');
-                $('#add-captain-form')[0].reset();
-            });
-
-            // Add captain form submit
-            $('#add-captain-form').submit(function(e) {
-                e.preventDefault();
-                const captain = {
-                    name: $('#captain-name').val(),
-                    level: parseInt($('#captain-level').val()) || 1,
-                    stats: {
-                        morale: parseInt($('#captain-morale').val()) || 0,
-                        navigation: parseInt($('#captain-navigation').val()) || 0,
-                        engineering: parseInt($('#captain-engineering').val()) || 0,
-                        medical: parseInt($('#captain-medical').val()) || 0,
-                        defense: parseInt($('#captain-defense').val()) || 0
-                    },
-                    traits: {}
-                };
-                rosterData.captains.push(captain);
-                renderCaptains();
-                $('#add-captain-modal').removeClass('flex').addClass('hidden');
-                $('#add-captain-form')[0].reset();
-                showToast('Captain added successfully', 'success');
-            });
-
-            // Remove captain
-            $(document).on('click', '.btn-remove-captain', function() {
-                const index = parseInt($(this).data('index'));
-                rosterData.captains.splice(index, 1);
-                renderCaptains();
-                showToast('Captain removed', 'info');
-            });
-
-            // Add crew button
-            $('#btn-add-crew').click(function() {
-                $('#add-crew-modal').removeClass('hidden').addClass('flex');
-            });
-
-            // Cancel add crew
-            $('#cancel-add-crew').click(function() {
-                $('#add-crew-modal').removeClass('flex').addClass('hidden');
-                $('#add-crew-form')[0].reset();
-            });
-
-            // Add crew form submit
-            $('#add-crew-form').submit(function(e) {
-                e.preventDefault();
-                const crewMember = {
-                    name: $('#crew-name').val(),
-                    type: $('#crew-type').val(),
-                    level: parseInt($('#crew-level').val()) || 1,
-                    stats: {
-                        morale: parseInt($('#crew-morale').val()) || 0,
-                        navigation: parseInt($('#crew-navigation').val()) || 0,
-                        engineering: parseInt($('#crew-engineering').val()) || 0,
-                        medical: parseInt($('#crew-medical').val()) || 0,
-                        defense: parseInt($('#crew-defense').val()) || 0
-                    }
-                };
-                rosterData.crew.push(crewMember);
-                renderCrew();
-                updateCrewTypeFilter();
-                $('#add-crew-modal').removeClass('flex').addClass('hidden');
-                $('#add-crew-form')[0].reset();
-                showToast('Crew member added successfully', 'success');
-            });
-
-            // Remove crew
-            $(document).on('click', '.btn-remove-crew', function() {
-                const index = parseInt($(this).data('index'));
-                rosterData.crew.splice(index, 1);
-                renderCrew();
-                updateCrewTypeFilter();
-                showToast('Crew member removed', 'info');
-            });
-
-            // Crew type filter
-            $('#crew-type-filter').change(function() {
-                const filter = $(this).val();
-                renderCrew(filter);
-            });
-
             // Save roster
             $('#btn-save-roster').click(function() {
+                gatherRosterData();
                 saveRoster();
             });
 
@@ -587,7 +445,6 @@
                             rosterData = data;
                             renderCaptains();
                             renderCrew();
-                            updateCrewTypeFilter();
                             showToast('Roster loaded successfully', 'success');
                         } catch (error) {
                             showToast('Error loading roster: Invalid JSON', 'error');
@@ -602,6 +459,18 @@
                 runOptimization();
             });
 
+            // Gather data from captain inputs on change
+            $(document).on('input', '.captain-name-input, .captain-level-input, .captain-stat-input', function() {
+                // Auto-gather data for real-time updates
+                gatherRosterData();
+            });
+
+            // Gather data from crew inputs on change
+            $(document).on('input', '.crew-name-input, .crew-level-input, .crew-stat-input, .crew-type-input', function() {
+                // Auto-gather data for real-time updates
+                gatherRosterData();
+            });
+
             // Loading overlay click prevention
             $('#loading-overlay').click(function(e) {
                 if (e.target === this) {
@@ -610,8 +479,75 @@
             });
         }
 
+        // Gather roster data from all inputs
+        function gatherRosterData() {
+            const captains = [];
+            const crew = [];
+
+            // Gather captain data
+            for (let i = 0; i < MAX_CAPTAIN_SLOTS; i++) {
+                const nameInput = $(`.captain-name-input[data-index="${i}"]`);
+                const levelInput = $(`.captain-level-input[data-index="${i}"]`);
+                const moraleInput = $(`.captain-stat-input[data-index="${i}"][data-field="morale"]`);
+                const navigationInput = $(`.captain-stat-input[data-index="${i}"][data-field="navigation"]`);
+                const engineeringInput = $(`.captain-stat-input[data-index="${i}"][data-field="engineering"]`);
+                const medicalInput = $(`.captain-stat-input[data-index="${i}"][data-field="medical"]`);
+                const defenseInput = $(`.captain-stat-input[data-index="${i}"][data-field="defense"]`);
+
+                const name = nameInput.val();
+                // Only add captain if name is filled
+                if (name && name.trim() !== '') {
+                    captains.push({
+                        name: name.trim(),
+                        level: parseInt(levelInput.val()) || 1,
+                        stats: {
+                            morale: parseInt(moraleInput.val()) || 0,
+                            navigation: parseInt(navigationInput.val()) || 0,
+                            engineering: parseInt(engineeringInput.val()) || 0,
+                            medical: parseInt(medicalInput.val()) || 0,
+                            defense: parseInt(defenseInput.val()) || 0
+                        },
+                        traits: {}
+                    });
+                }
+            }
+
+            // Gather crew data
+            for (let i = 0; i < MAX_CREW_SLOTS; i++) {
+                const nameInput = $(`.crew-name-input[data-index="${i}"]`);
+                const typeInput = $(`.crew-type-input[data-index="${i}"]`);
+                const levelInput = $(`.crew-level-input[data-index="${i}"]`);
+                const moraleInput = $(`.crew-stat-input[data-index="${i}"][data-field="morale"]`);
+                const navigationInput = $(`.crew-stat-input[data-index="${i}"][data-field="navigation"]`);
+                const engineeringInput = $(`.crew-stat-input[data-index="${i}"][data-field="engineering"]`);
+                const medicalInput = $(`.crew-stat-input[data-index="${i}"][data-field="medical"]`);
+                const defenseInput = $(`.crew-stat-input[data-index="${i}"][data-field="defense"]`);
+
+                const name = nameInput.val();
+                // Only add crew if name is filled
+                if (name && name.trim() !== '') {
+                    crew.push({
+                        name: name.trim(),
+                        type: typeInput.val(),
+                        level: parseInt(levelInput.val()) || 1,
+                        stats: {
+                            morale: parseInt(moraleInput.val()) || 0,
+                            navigation: parseInt(navigationInput.val()) || 0,
+                            engineering: parseInt(engineeringInput.val()) || 0,
+                            medical: parseInt(medicalInput.val()) || 0,
+                            defense: parseInt(defenseInput.val()) || 0
+                        }
+                    });
+                }
+            }
+
+            rosterData.captains = captains;
+            rosterData.crew = crew;
+        }
+
         // Save roster to file
         async function saveRoster() {
+            gatherRosterData();
             showLoading('Saving roster...');
             try {
                 const response = await fetch(`${API_BASE}/api/roster`, {
@@ -632,26 +568,26 @@
 
         // Run optimization
         async function runOptimization() {
+            gatherRosterData();
+            
             const targets = {
                 morale: parseInt($('#morale-target').val()) || 0,
-                navigation: parseInt($('#navigation-target').val()) || 0,
-                engineering: parseInt($('#engineering-target').val()) || 0,
-                medical: parseInt($('#medical-target').val()) || 0,
-                defense: parseInt($('#defense-target').val()) || 0
+                combat: parseInt($('#combat-target').val()) || 0,
+                seafaring: parseInt($('#seafaring-target').val()) || 0
             };
 
-            if (targets.morale === 0 && targets.navigation === 0 && targets.engineering === 0 && targets.medical === 0 && targets.defense === 0) {
+            if (targets.morale === 0 && targets.combat === 0 && targets.seafaring === 0) {
                 showToast('Please enter at least one voyage target', 'error');
                 return;
             }
 
             if (rosterData.captains.length === 0) {
-                showToast('No captains available', 'error');
+                showToast('No captains available (fill in at least one captain name)', 'error');
                 return;
             }
 
             if (rosterData.crew.length === 0) {
-                showToast('No crew members available', 'error');
+                showToast('No crew members available (fill in at least one crew name)', 'error');
                 return;
             }
 
