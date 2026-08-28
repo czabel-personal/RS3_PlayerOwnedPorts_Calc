@@ -23,7 +23,7 @@ from api import app as flask_app, ROSTER_FILE, SHIP_CONFIG_FILE
 HOST = "127.0.0.1"
 PORT = 5000
 WINDOW_TITLE = "Ship Crew Optimizer"
-WINDOW_SIZE = (1200, 800)
+WINDOW_SIZE = (1600, 1000)
 
 
 def get_api_url() -> str:

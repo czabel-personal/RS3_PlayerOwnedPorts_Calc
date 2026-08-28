@@ -443,9 +443,18 @@ class BuildingBonuses:
         )
 
 
+MAX_CONSUMABLE_STACK = 3  # Maximum of 3 of each consumable can be active
+
+
 @dataclass
 class ConsumableBuff:
-    """Consumable items that provide flat or percentage bonuses."""
+    """Consumable items that provide flat or percentage bonuses.
+    
+    Available consumables:
+    - Ration Pack: +10% morale per use, up to 3 stackable
+    - Powder Keg: +10% combat per use, up to 3 stackable
+    - Bottled Cry: +10% seafaring per use, up to 3 stackable
+    """
     name: str
     flat_stats: Stats = field(default_factory=Stats)
     percentage_stats: Stats = field(default_factory=Stats)
@@ -466,6 +475,27 @@ class ConsumableBuff:
             flat_stats=Stats.from_dict(data.get('flat_stats', {})),
             percentage_stats=Stats.from_dict(data.get('percentage_stats', {}))
         )
+
+
+# Available consumable buffs with their benefits
+# Each consumable provides +10% to a specific stat, up to 3 stackable uses
+CONSUMABLE_BUFFS = {
+    "Ration Pack": ConsumableBuff(
+        name="Ration Pack",
+        flat_stats=Stats(),
+        percentage_stats=Stats(morale=0.10)
+    ),
+    "Powder Keg": ConsumableBuff(
+        name="Powder Keg",
+        flat_stats=Stats(),
+        percentage_stats=Stats(combat=0.10)
+    ),
+    "Bottled Cry": ConsumableBuff(
+        name="Bottled Cry",
+        flat_stats=Stats(),
+        percentage_stats=Stats(seafaring=0.10)
+    ),
+}
 
 
 @dataclass

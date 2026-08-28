@@ -1,0 +1,997 @@
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0a0f1d;
+    color: #e0e0e0;
+    min-height: 100vh;
+    min-width: 1000px;
+    line-height: 1.5;
+}
+
+/* ===== Scrollbar Styling ===== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #1a1a2e; }
+::-webkit-scrollbar-thumb { background: #00d4ff; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #00a8cc; }
+
+/* ===== Animations ===== */
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+.animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ===== Header ===== */
+.header {
+    background-color: #001a3d;
+    border-bottom: 1px solid #003361;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+.header-inner {
+    max-width: 1900px;
+    margin: 0 auto;
+    padding: 16px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #00d4ff;
+}
+.header-status {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.875rem;
+}
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.status-dot.green { background-color: #4ade80; }
+.status-dot.yellow { background-color: #facc15; }
+.status-dot.red { background-color: #f87171; }
+.status-text.green { color: #4ade80; }
+.status-text.yellow { color: #facc15; }
+.status-text.red { color: #f87171; }
+.status-text.gray { color: #9ca3af; }
+
+/* ===== Buttons ===== */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-primary {
+    background: linear-gradient(135deg, #0066b3, #004d8a);
+    color: #fff;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, #005599, #003d73);
+}
+.btn-cyan {
+    background-color: #0066b3;
+    color: #fff;
+}
+.btn-cyan:hover {
+    background-color: #005599;
+}
+.btn-blue {
+    background-color: #2563eb;
+    color: #fff;
+}
+.btn-blue:hover {
+    background-color: #1d4ed8;
+}
+.btn-red {
+    background-color: #dc2626;
+    color: #fff;
+}
+.btn-red:hover {
+    background-color: #b91c1c;
+}
+.btn-optimize {
+    padding: 12px 32px;
+    font-size: 1.125rem;
+    background: linear-gradient(135deg, #0066b3, #2563eb);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 102, 179, 0.4);
+}
+.btn-optimize:hover {
+    background: linear-gradient(135deg, #005599, #1d4ed8);
+}
+
+/* ===== Container & Layout ===== */
+.container {
+    max-width: 1900px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* Top-level grid: Roster Actions + Voyage section side-by-side */
+.top-grid {
+    display: grid;
+    grid-template-columns: 15% 1fr;
+    gap: 24px;
+    margin-bottom: 12px;
+}
+
+/* Main grid: Ships | Captains | Crew */
+.main-grid {
+    display: grid;
+    grid-template-columns: 350px 300px 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+/* Results row below the main grid */
+.results-row {
+    width: 100%;
+}
+
+/* Full-width panel spanning all columns */
+.full-width-panel {
+    width: 100%;
+}
+
+/* ===== Panels ===== */
+.panel {
+    background-color: #001a3d;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid #003361;
+    overflow: hidden;
+}
+.panel-header {
+    background-color: #003361;
+    padding: 12px 8px;
+    border-bottom: 1px solid #003361;
+}
+.panel-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #58aed8;
+}
+.panel-body {
+    padding: 12px;
+}
+
+/* ===== Roster Section ===== */
+.roster-actions-section {
+    margin-bottom: 12px;
+}
+
+/* ===== Voyage Section ===== */
+.voyage-section {
+    margin-bottom: 12px;
+}
+.voyage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 24px;
+    align-items: start;
+}
+.voyage-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.voyage-button-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+}
+.input-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    align-items: center;
+    gap: 12px;
+}
+.input-row label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #d1d5db;
+    text-align: right;
+}
+
+/* ===== Form Elements ===== */
+input[type="text"],
+input[type="number"],
+select {
+    background-color: #0a0f1d;
+    border: 1px solid #003361;
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: #e0e0e0;
+    width: 100%;
+    min-width: 0;
+    font-size: 0.875rem;
+    transition: border-color 0.2s;
+}
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: #00d4ff;
+}
+input::placeholder {
+    color: #6b7280;
+}
+
+/* ===== Captain & Crew Cards ===== */
+.card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* Captains list allows dragging */
+#captains-list {
+    cursor: grab;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    visibility: visible;
+    opacity: 1;
+}
+
+#captains-list:active {
+    cursor: grabbing;
+}
+
+/* Captains list while dragging */
+#captains-list.dragging {
+    cursor: grabbing;
+    min-height: 100px;
+}
+
+/* Ensure captain cards are always visible */
+.captain-card {
+    background-color: #0a0f1d;
+    border-radius: 8px;
+    border: 1px solid #003361;
+    padding: 12px;
+    transition: border-color 0.2s, opacity 0.2s, transform 0.1s;
+    cursor: grab;
+    user-select: none;
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    min-height: 150px;
+}
+.captain-card:hover {
+    border-color: #00d4ff;
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+}
+.captain-card:active {
+    cursor: grabbing;
+}
+
+/* jQuery UI Sortable placeholder styling */
+.captain-card.placeholder-shim {
+    visibility: visible;
+    background-color: rgba(0, 51, 97, 0.5);
+    border: 2px dashed #00d4ff;
+    opacity: 0.5;
+}
+
+/* jQuery UI Sortable dragging styling */
+.ui-sortable-handle {
+    opacity: 0.85;
+    transform: rotate(2deg);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Crew cards - not draggable, distinct from captain cards */
+.crew-card {
+    background-color: #0a0f1d;
+    border-radius: 8px;
+    border: 1px solid #003361;
+    padding: 12px;
+    transition: border-color 0.2s;
+    cursor: default;
+    user-select: text;
+}
+.crew-card:hover {
+    border-color: #00d4ff;
+}
+
+/* Crew level control */
+.level-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.level-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #9ca3af;
+    min-width: 24px;
+    text-align: center;
+}
+
+.level-up-btn {
+    background-color: #003361;
+    border: 1px solid #00d4ff;
+    border-radius: 6px;
+    color: #00d4ff;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.level-up-btn:hover {
+    background-color: #004d99;
+    transform: translateY(-1px);
+}
+
+.level-up-btn:active {
+    transform: translateY(0);
+}
+
+/* Crew stats grid - 3 columns for Morale, Combat, Seafaring */
+.crew-stats-grid {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+.card-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #9ca3af;
+    margin-bottom: 4px;
+}
+.card-input {
+    width: 100%;
+    font-size: 0.875rem;
+}
+.card-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.card-grid-5 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+/* ===== Action Buttons Row ===== */
+.actions-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ===== Results ===== */
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.result-count {
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+.results-list {
+    max-height: 800px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.result-card {
+    background-color: #0a0f1d;
+    border-radius: 8px;
+    border: 1px solid #003361;
+    padding: 16px;
+    transition: border-color 0.2s;
+}
+.result-card:hover {
+    border-color: #00d4ff;
+}
+.result-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+.result-title {
+    font-weight: 500;
+    color: #58aed8;
+}
+.result-score {
+    color: #00d4ff;
+    font-weight: 500;
+}
+.result-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+.result-badge.meets {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: #bbf7d0;
+}
+.result-badge.partial {
+    background-color: rgba(234, 179, 8, 0.2);
+    color: #fef08a;
+}
+.result-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    font-size: 0.75rem;
+}
+.result-stat-label {
+    color: #9ca3af;
+}
+.result-crew-section {
+    border-top: 1px solid #003361;
+    padding-top: 8px;
+    margin-top: 8px;
+}
+.result-crew-label {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-bottom: 4px;
+}
+.result-crew-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.crew-tag {
+    padding: 2px 8px;
+    background-color: #003361;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+    text-align: center;
+    color: #9ca3af;
+    padding: 32px 0;
+}
+
+/* ===== Loading Overlay ===== */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+.loading-overlay.active {
+    display: flex;
+}
+.loading-box {
+    background-color: #001a3d;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    border: 1px solid #003361;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 4px solid rgba(0, 212, 255, 0.2);
+    border-top-color: #00d4ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== Toast Notifications ===== */
+.toast-container {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.toast {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 320px;
+}
+.toast svg {
+    flex-shrink: 0;
+}
+.toast.success { background-color: #16a34a; }
+.toast.error { background-color: #dc2626; }
+.toast.info { background-color: #0066b3; }
+.toast.warning { background-color: #ca8a04; }
+.toast p {
+    font-size: 0.875rem;
+    color: #fff;
+}
+
+/* ===== Utility ===== */
+.hidden { display: none !important; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+.gap-6 { gap: 24px; }
+.space-y-3 > * + * { margin-top: 12px; }
+.space-y-4 > * + * { margin-top: 16px; }
+.space-y-6 > * + * { margin-top: 24px; }
+.mb-1 { margin-bottom: 4px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 12px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.px-2 { padding-left: 8px; padding-right: 8px; }
+.px-3 { padding-left: 12px; padding-right: 12px; }
+.px-4 { padding-left: 16px; padding-right: 16px; }
+.py-1 { padding-top: 4px; padding-bottom: 4px; }
+.py-2 { padding-top: 8px; padding-bottom: 8px; }
+.py-3 { padding-top: 12px; padding-bottom: 12px; }
+.py-4 { padding-top: 16px; padding-bottom: 16px; }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.text-lg { font-size: 1.125rem; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.text-center { text-align: center; }
+.text-white { color: #fff; }
+.text-gray-100 { color: #f3f4f6; }
+.text-gray-300 { color: #d1d5db; }
+.text-gray-400 { color: #9ca3af; }
+.text-cyan-300 { color: #58aed8; }
+.text-cyan-400 { color: #00d4ff; }
+.text-red-400 { color: #f87171; }
+.text-green-400 { color: #4ade80; }
+.text-yellow-400 { color: #facc15; }
+
+/* ===== Ship Slots Column ===== */
+.ship-slots-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.ship-slot-card {
+    background-color: #0a0f1d;
+    border: 1px solid #003361;
+    border-radius: 8px;
+    padding: 12px;
+    transition: border-color 0.2s, opacity 0.2s;
+}
+.ship-slot-header {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.ship-slot-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    min-width: 50px;
+    color: #58aed8;
+}
+.ship-name-input {
+    background-color: #0a0f1d;
+    border: 1px solid #003361;
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: #e0e0e0;
+    width: 100%;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: border-color 0.2s;
+}
+.ship-name-input:focus {
+    outline: none;
+    border-color: #00d4ff;
+}
+.ship-name-input::placeholder {
+    color: #6b7280;
+    font-weight: 400;
+}
+.ship-slot-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #003361;
+    transition: opacity 0.2s, filter 0.2s;
+}
+.ship-slot-body.disabled {
+    opacity: 0.5;
+    filter: grayscale(50%);
+    pointer-events: none;
+}
+.ship-equipment-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.ship-stat-group {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.ship-stat-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.ship-equipment-input {
+    background-color: #0a0f1d;
+    border: 1px solid #003361;
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: #e0e0e0;
+    width: 100%;
+    font-size: 0.85rem;
+    transition: border-color 0.2s;
+}
+.ship-equipment-input:focus {
+    outline: none;
+    border-color: #00d4ff;
+}
+.ship-equipment-input::placeholder {
+    color: #6b7280;
+}
+.ship-equipment-input:disabled {
+    opacity: 0.5;
+    background-color: #0a0f1d;
+    cursor: not-allowed;
+}
+
+/* ===== Captain Card Compact Layout ===== */
+.captain-card {
+    background-color: #0a0f1d;
+    border-radius: 8px;
+    border: 1px solid #003361;
+    padding: 12px;
+    transition: border-color 0.2s, opacity 0.2s, transform 0.1s;
+    cursor: grab;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    visibility: visible;
+    opacity: 1;
+    min-height: 120px;
+}
+.captain-card:hover {
+    border-color: #00d4ff;
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+}
+.captain-card:active {
+    cursor: grabbing;
+}
+
+/* Top Row: Name Input + Traits Button */
+.captain-top-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Captain Name Input - Full width in top row */
+.captain-name-input {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #003361;
+    border-radius: 0;
+    padding: 0;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: border-color 0.2s;
+}
+.captain-name-input:focus {
+    outline: none;
+    border-bottom-color: #00d4ff;
+}
+.captain-name-input::placeholder {
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Traits Button - aligned to right in top row */
+.traits-btn {
+    background-color: #003361;
+    border: 1px solid #0066b3;
+    border-radius: 4px;
+    padding: 6px 12px;
+    color: #58aed8;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+.traits-btn:hover {
+    background-color: #004d8a;
+    border-color: #00d4ff;
+    color: #fff;
+}
+
+/* Stats Row - Horizontal layout */
+.captain-stats-column {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+/* Individual Stat Row */
+.captain-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Stat Label (M:, C:, S:) */
+.captain-stat-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #58aed8;
+    min-width: 18px;
+    text-align: left;
+}
+
+/* Stat Input Wrapper - contains input and trait indicator */
+.captain-stat-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    flex: 1;
+}
+
+/* Stat Input Field */
+.captain-stat-input {
+    background-color: #0a0f1d;
+    border: 1px solid #003361;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #e0e0e0;
+    width: 60px;
+    font-size: 0.8rem;
+    transition: border-color 0.2s;
+}
+.captain-stat-input:focus {
+    outline: none;
+    border-color: #00d4ff;
+}
+.captain-stat-input::placeholder {
+    color: #6b7280;
+}
+
+/* Trait Indicator - positioned to the right of stat input */
+.trait-indicator {
+    min-width: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Green + for active traits */
+.trait-plus {
+    color: #4ade80;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* ===== Traits Modal ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+.modal-overlay.hidden {
+    display: none;
+}
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-box {
+    background-color: #001a3d;
+    border: 1px solid #0066b3;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    min-width: 320px;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid #003361;
+}
+
+.modal-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #58aed8;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+.modal-close:hover {
+    color: #fff;
+}
+
+.modal-body {
+    padding: 16px;
+}
+
+/* Traits Grid - layout for trait options */
+.traits-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* Individual Trait Option */
+.trait-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background-color: #0a0f1d;
+    border: 1px solid #003361;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+.trait-option:hover {
+    border-color: #0066b3;
+}
+.trait-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.trait-name {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #e0e0e0;
+}
+.trait-desc {
+    font-size: 0.8rem;
+    color: #4ade80;
+}
+
+/* Traits Dropdowns - single column layout for trait slot dropdowns */
+.traits-dropdowns-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.traits-dropdown-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.traits-dropdown-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #9ca3af;
+}
+
+.traits-dropdown-select {
+    background-color: #0a0f1d;
+    border: 1px solid #003361;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    color: #e0e0e0;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.traits-dropdown-select:hover {
+    border-color: #0066b3;
+}
+
+.traits-dropdown-select:focus {
+    outline: none;
+    border-color: #00d4ff;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid #003361;
+}
